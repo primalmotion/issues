@@ -34,6 +34,8 @@
     id          _ephemeralSelectedIssue;
     int         _openIssueWindows;
     Function    _callbackIfReturnYes;
+
+    CPTimer     _timerReload;
 }
 
 - (void)awakeFromCib
@@ -180,6 +182,9 @@
                                              selector:@selector(issueChanged:)
                                                  name:GitHubAPIIssueDidChangeNotification
                                                object:nil];
+
+
+    _timerReload = [CPTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(reload:) userInfo:nil repeats:YES];
 }
 
 - (id)init
@@ -326,7 +331,7 @@
 }
 
 /*
-    If the user has a bunch of issues selected we want to make sure 
+    If the user has a bunch of issues selected we want to make sure
     they're sure they want to close the issues before we actually do it
     hence an intermediate method...
 */
@@ -369,7 +374,7 @@
 }
 
 /*
-    If the user has a bunch of issues selected we want to make sure 
+    If the user has a bunch of issues selected we want to make sure
     they're sure they want to reopen the issues before we actually do it
     hence an intermediate method...
 */
@@ -620,7 +625,7 @@
         // FIX ME: this is returning false... XD
     }];
 
-   
+
 }*/
 
 - (void)alertDidEnd:(CPAlert)anAlert returnCode:(int)tag
@@ -640,7 +645,7 @@
 
 /*
     The API here is a little weird so bear with me.
-    The initial return is BOOL. If it returns NO the 
+    The initial return is BOOL. If it returns NO the
     callback supplied will get called if the user clicks "okay"
     otherwise nothing happens.
 */
